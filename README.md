@@ -6,12 +6,16 @@ The point of the split: **these skills carry the _how_; each repository's `AGENT
 
 ## Install
 
+Two delivery paths. Both serve the same `skills/` directory, so switching between them needs no rework.
+
+### A. As a plugin — account-synced (preferred)
+
 ```bash
-devin auth login            # once, if not already signed in
+devin auth login            # a Devin account; see the caveat below
 devin plugins install iWiiCK/iwiick-ai-agent-plugin
 ```
 
-This records the plugin in your personal manifest in Devin Cloud, so it loads on every machine you sign in to and in your cloud sessions. Add `--local ./iwiick-ai-agent-plugin` instead to link a working copy on one machine while authoring.
+This records the plugin in your personal manifest in Devin Cloud, so it loads on every machine you sign in to and in your cloud sessions. Skills are invoked as `/iwiick:<skill>`.
 
 ```bash
 devin plugins info iwiick       # what it provides, and its source
@@ -19,7 +23,40 @@ devin plugins update iwiick     # re-fetch at the latest commit
 devin skills list               # confirm the skills loaded
 ```
 
-Skills are invoked as `/iwiick:<skill>`, or activated by the agent when relevant.
+> **Caveat:** plugin management requires a **Devin account**. A legacy Windsurf Enterprise credential (`windsurf_api_key` in `credentials.toml`) authenticates CLI *usage* but leaves `devin auth status` reporting "Not logged in", and `plugins install` then fails with `You must be logged in to manage plugins`. If that is your situation, use path B.
+
+### B. Via the sync script — git-portable
+
+```powershell
+git clone https://github.com/iWiiCK/iwiick-ai-agent-plugin.git
+cd iwiick-ai-agent-plugin
+.\sync-skills.ps1 -DryRun     # preview
+.\sync-skills.ps1             # install into the global skills directory
+devin skills list             # confirm
+```
+
+On any other machine: clone, run the script. To update: `git pull`, run it again.
+
+The script copies `skills/*` into the global skills directory (`%APPDATA%\devin\skills` on Windows) and **adds the `iwiick-` prefix** to each directory name, the `name:` frontmatter and every cross-reference — because that directory has no namespace, so flat names like `documentation` would risk colliding with third-party global skills. Skills are then invoked as `/iwiick-<skill>`.
+
+It is idempotent, replaces only the `iwiick-*` directories it manages, and leaves other global skills untouched. `-DryRun` reports without writing; `-SkillsRoot` targets a different directory; `-Prefix ''` disables prefixing (not recommended).
+
+Because the output is deterministic, you can confirm an install is current:
+
+```powershell
+.\sync-skills.ps1 -SkillsRoot "$env:TEMP\check"
+# then diff "$env:TEMP\check" against %APPDATA%\devin\skills — expect no differences
+```
+
+### Which to use
+
+| | Plugin | Sync script |
+| --- | --- | --- |
+| Needs a Devin account | Yes | No |
+| Reaches cloud sessions | Yes | No |
+| New machine | Automatic on sign-in | `git clone` + run script |
+| Updating | `devin plugins update iwiick` | `git pull` + run script |
+| Skill names | `/iwiick:clean-code` | `/iwiick-clean-code` |
 
 ## The skills
 

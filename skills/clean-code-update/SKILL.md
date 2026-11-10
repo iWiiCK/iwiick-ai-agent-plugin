@@ -82,6 +82,11 @@ In `clean-code`, set the synced commit SHA and date to the new `HEAD`. Add a new
 
 Commit to the plugin repo with a message naming the SHA range, then push. Until it is pushed, the update exists on one machine only and will not reach cloud sessions or your other machines.
 
+Then make the edit live, depending on how the skills are installed:
+
+- **Plugin install** → `devin plugins update iwiick`.
+- **Sync script install** (skills in the global directory with an `iwiick-` prefix) → re-run `.\sync-skills.ps1`. Editing the repo alone changes nothing until you do.
+
 ### 8. Report
 
 ```
