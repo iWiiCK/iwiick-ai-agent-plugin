@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Portable engineering discipline for agents: analysis, planning, implementation, debugging, risk-based testing, performance optimisation, documentation, deployment, and the Clean Code catalogue.",
   "author": { "name": "Heshan Wickramaratne" },
-  "repository": "https://github.com/iWiiCK/iwiick-devin-plugin",
+  "repository": "https://github.com/iWiiCK/iwiick-ai-agent-plugin",
   "license": "MIT",
   "keywords": [
     "engineering",

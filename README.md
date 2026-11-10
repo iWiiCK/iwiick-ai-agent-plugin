@@ -8,10 +8,10 @@ The point of the split: **these skills carry the _how_; each repository's `AGENT
 
 ```bash
 devin auth login            # once, if not already signed in
-devin plugins install iWiiCK/iwiick-devin-plugin
+devin plugins install iWiiCK/iwiick-ai-agent-plugin
 ```
 
-This records the plugin in your personal manifest in Devin Cloud, so it loads on every machine you sign in to and in your cloud sessions. Add `--local ./iwiick-devin-plugin` instead to link a working copy on one machine while authoring.
+This records the plugin in your personal manifest in Devin Cloud, so it loads on every machine you sign in to and in your cloud sessions. Add `--local ./iwiick-ai-agent-plugin` instead to link a working copy on one machine while authoring.
 
 ```bash
 devin plugins info iwiick       # what it provides, and its source
