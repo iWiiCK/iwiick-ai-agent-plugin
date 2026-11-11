@@ -23,9 +23,11 @@ devin plugins update iwiick     # re-fetch at the latest commit
 devin skills list               # confirm the skills loaded
 ```
 
-> **Caveat:** plugin management requires a **Devin account**. A legacy Windsurf Enterprise credential (`windsurf_api_key` in `credentials.toml`) authenticates CLI *usage* but leaves `devin auth status` reporting "Not logged in", and `plugins install` then fails with `You must be logged in to manage plugins`. If that is your situation, use path B.
+> **Run plugin commands from a normal terminal.** Inside an IDE extension host (Windsurf/Devin Desktop tool shells, where `WINDSURF_EXT_HOST_PID` is set) the CLI does not pick up the stored credential: `devin auth status` reports "Not logged in" and every `plugins` command fails with `You must be logged in to manage plugins`. The credential is fine — the environment is not. A plain terminal works.
 
-### B. Via the sync script — git-portable
+If the install reports `installed locally but not synced to your personal plugins`, the skills work on that machine but will not reach cloud sessions or your other devices. Re-run the install later; if it persists, check that the repository is reachable by Devin Cloud (a private repo may need access granted, or can be made public).
+
+### B. Via the sync script — git-portable, no plugin system
 
 ```powershell
 git clone https://github.com/iWiiCK/iwiick-ai-agent-plugin.git
@@ -50,13 +52,20 @@ Because the output is deterministic, you can confirm an install is current:
 
 ### Which to use
 
+**Prefer the plugin.** The sync script exists for machines where the plugin system is unavailable or where you want the skills without installing anything.
+
 | | Plugin | Sync script |
 | --- | --- | --- |
-| Needs a Devin account | Yes | No |
-| Reaches cloud sessions | Yes | No |
+| Reaches cloud sessions | Yes, once synced to the personal manifest | No |
 | New machine | Automatic on sign-in | `git clone` + run script |
 | Updating | `devin plugins update iwiick` | `git pull` + run script |
 | Skill names | `/iwiick:clean-code` | `/iwiick-clean-code` |
+
+**Do not use both at once.** They install the same skills under different names, and the agent then sees every skill twice. If you switch from the script to the plugin, delete the script's output:
+
+```powershell
+Remove-Item -Recurse -Force "$env:APPDATA\devin\skills\iwiick-*"
+```
 
 ## The skills
 
